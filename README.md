@@ -46,7 +46,7 @@ Project Kisan addresses these challenges through:
 
 ---
 
-## 🚀 **Live Application**
+## 🚀 **Live Application** (Server permanently shut down to save credits.)
 
 <div align="center">
 

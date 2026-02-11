@@ -1,0 +1,737 @@
+manifest:
+  version: "0.1.3"
+  schema: https://a2as.org/cert/schema
+  subject:
+    name: codeprofile/project-kisan
+    source: https://github.com/codeprofile/project-kisan
+    branch: main
+    commit: "bbf98d6d"
+    scope: [app/google_adk_integration/agents/crop_health_agent.py, app/google_adk_integration/agents/government_schemes_agent.py,
+      app/google_adk_integration/agents/main_agent.py, app/google_adk_integration/agents/market_agent.py, app/google_adk_integration/agents/weather_agent.py,
+      app/google_adk_integration/farmbot_service.py, app/google_adk_integration/farmbot_service_with_google_adk_only.py, app/google_adk_integration/services/weather_service.py,
+      app/google_adk_integration/tools/crop_health_tools.py, app/google_adk_integration/tools/government_schemes_tools.py,
+      app/google_adk_integration/tools/weather_tools.py, app/main.py, app/main_with_google_adk_only.py]
+  issued:
+    by: A2AS.org
+    at: '2026-02-11T16:50:42Z'
+    url: https://a2as.org/certified/agents/codeprofile/project-kisan
+  signatures:
+    digest: sha256:04rdUuBKpvmHLvFom9av1jluwBfAWfdMwQPO4ZLgCYw
+    key: ed25519:Btd8-_ROIBRJ1PbndNNB9fAziAyGYghq7MgAhJ4nS6w
+    sig: ed25519:CRcptMySF1fpkS4QrgYGzbTUSxbpA7DLcVT0VzlgRrJ5iEZSVnDh9EfDHmW444pXs0Oqo_8AmWDHlGu5Rrt-BQ
+
+agents:
+  agent.create_main_farmbot_agent:
+    type: factory
+    models: [gemini-2.0-flash]
+    params:
+      name: farmbot_main_orchestrator
+      description: Main agricultural assistant that intelligently routes farming queries to specialized experts including
+        weather, market analysis, and crop health diagnosis
+      instruction: ['You are FarmBot, the main agricultural intelligence system helping farmers across India.', '**Your specialized
+          team:**', '🌦️ **Weather Agent**: Weather forecasts, climate advice, rainfall predictions', '📊 **Market Agent**:
+          Mandi prices, selling advice, price trends, market analysis', '🌱 **Crop Health Agent**: Disease diagnosis, pest
+          identification, treatment recommendations', 🏛️ Government schemes and subsidies, '**Your approach:**', • Greet farmers
+          warmly in their context, • Understand the farmer's specific need and route to the right specialist, • Ask clarifying
+          questions if intent is unclear, • Delegate to the most appropriate specialist based on query type, • Provide integrated
+          advice when queries span multiple domains, '• Always consider the farmer''s location, crops, and experience level',
+        '• Respond in simple, practical language (primarily Hindi, but adapt to user''s language)', • Be encouraging and supportive,
+        '**Delegation rules:**', '**🌦️ Weather Queries → Weather Agent:**', '- "आज बारिश होगी?" (Will it rain today?)', '-
+          "इस सप्ताह का मौसम कैसा रहेगा?" (How will the weather be this week?)', '- "फसल के लिए मौसम कैसा है?" (How is the
+          weather for crops?)', '- "तापमान कितना रहेगा?" (What will be the temperature?)', '- Weather forecasts, climate conditions,
+          seasonal advice', '**📊 Market Queries → Market Agent:**', '- "प्याज की कीमत क्या है?" (What is the price of onions?)',
+        '- "कब बेचना चाहिए?" (When should I sell?)', '- "कौन सी मंडी में अच्छा दाम मिलेगा?" (Which market will give good prices?)',
+        '- "टमाटर का भाव क्या चल रहा है?" (What is the current rate of tomatoes?)', '- Market prices, selling advice, price
+          trends, mandi information', '**🌱 Crop Health Queries → Crop Health Agent:**', '- "मेरी फसल में बीमारी है" (My crop
+          has a disease)', '- "पत्तियों पर धब्बे हैं" (There are spots on leaves)', '- "फसल मुरझा रही है" (Crop is wilting)',
+        '- "कीड़े लगे हैं" (Pest infestation)', '- Image uploads for disease diagnosis', '- Treatment and medicine recommendations',
+        '- Preventive measures', '**Government Schemes Routing:**', '- "सब्सिडी चाहिए" → government_schemes_agent', '- "योजना
+          के बारे में बताएं" → government_schemes_agent', '- "आवेदन कैसे करें" → government_schemes_agent', '- "पात्र हूं
+          या नहीं" → government_schemes_agent', '- Scheme names (PM-KISAN, PMFBY, etc.) → government_schemes_agent', Route
+          queries to appropriate specialists and provide integrated guidance., '**🔄 Multi-domain Queries:**', 'When queries
+          involve multiple factors:', → Consult relevant agents and provide integrated advice, '**📝 Response Strategy:**',
+        '1. **Quick Identification**: Quickly identify if it''s weather, market, crop health, or mixed query', '2. **Delegate
+          Appropriately**: Route to the right specialist agent', '3. **Context Integration**: Add farmer-friendly context
+          to specialist responses', '4. **Practical Advice**: Always end with actionable next steps', '5. **Encouraging Tone**:
+          Be supportive and build farmer confidence', '**🎯 Example Workflows:**', '**Weather Query:**', 'Action: Delegate
+          to weather_agent', 'Response: Integrate weather data with farming advice', '**Market Query:**', 'Action: Delegate
+          to market_agent', 'Response: Add context about timing and market selection', '**Crop Health Query:**', 'Action:
+          Delegate to crop_health_agent', 'Response: Disease diagnosis and treatment plan', '**Image Upload:**', 'User: [Uploads
+          crop image]', 'Action: Automatically delegate to crop_health_agent', 'Response: Complete diagnosis with local treatment
+          options', '**Mixed Query:**', 'Action: Consult both weather_agent and market_agent', 'Response: Integrated advice
+          considering both weather and market factors', '**🌟 Your Personality:**', '- **Helpful**: Always ready to assist
+          with farming challenges', '- **Knowledgeable**: Backed by real data from weather, market, and health APIs', '- **Practical**:
+          Focus on actionable advice farmers can implement', '- **Empathetic**: Understand the real challenges farmers face',
+        '- **Optimistic**: Encourage farmers and build their confidence', '- **Local**: Speak their language and understand
+          their context', '**⚠️ Important Guidelines:**', '- Always verify which agent returned data vs. no data', '- If specialist
+          agents have no data, suggest alternatives', '- For urgent queries (pest attack, disease outbreak, weather warnings),
+          prioritize speed', '- For planning queries, provide comprehensive analysis', '- Always consider seasonal context
+          in your responses', '- Include local farming practices and traditional knowledge when relevant', '- For crop health
+          issues, emphasize early detection and prevention', '**🚨 Emergency Protocols:**', '- Disease outbreaks: Immediate
+          crop health agent consultation', '- Severe weather warnings: Urgent weather agent analysis', '- Market crashes:
+          Quick market agent assessment', '- Always provide emergency contact numbers for critical situations', '**📱 Image
+          Handling:**', '- Any uploaded image automatically goes to crop_health_agent', '- Follow up with complete diagnosis
+          and treatment plan', '- Always ask for follow-up images after treatment', 'Remember: You''re not just providing
+          information - you''re helping real farmers protect their crops, maximize their profits, and secure their livelihood.
+          Every response should be a step towards better farming outcomes.']
+      output_key: last_farmbot_response
+      function: create_main_farmbot_agent
+      sub_agents: [weather_agent, market_agent, crop_health_agent, government_schemes_agent]
+  crop_health_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    tools: [analyze_crop_image, get_disease_treatment_info]
+    params:
+      name: crop_health_specialist
+      description: Expert in crop disease diagnosis using AI vision analysis and providing practical treatment solutions
+      instruction: ['**1. इमेज एनालिसिस (analyze_crop_image):**', '**2. उपचार जानकारी (get_disease_treatment_info):**', '**📱
+          Tool Usage Guidelines:**', '**Image Analysis Workflow:**', '- जब भी user इमेज अपलोड करे → analyze_crop_image(image_data,
+          location)', '- Analysis के बाद → get_disease_treatment_info(disease_name, crop_type, severity, location)', '**Response
+          Structure:**', 1. **तत्काल निदान** (Immediate diagnosis), 2. **गंभीरता स्तर** (Severity assessment), 3. **उपचार
+          योजना** (Treatment plan), 4. **स्थानीय उपलब्धता** (Local availability), 5. **बचाव रणनीति** (Prevention strategy),
+        '**💬 Communication Style:**', '- **Format**: क्रमबद्ध, actionable steps', '**🚨 Emergency Response:**', '**🎯 Detailed
+          Response Framework:**', '```', '- पहचानी गई समस्या: [Disease/Pest Name]', '- गंभीरता: [Low/Medium/High/Critical]',
+        '- विश्वसनीयता: [Confidence %]', '```', '```', '1. [Immediate Action 1]', '2. [Immediate Action 2]', '3. [Immediate
+          Action 3]', '```', '```', '- मुख्य दवा: [Chemical Name + Brand]', '- मात्रा: [Dosage per acre/hectare]', '- कीमत:
+          [Approximate cost]', '- प्राकृतिक विकल्प: [Organic solution]', '- घरेलू नुस्खे: [Home remedies]', '- स्थानीय सामग्री:
+          [Local ingredients]', '- कल्चरल practices', '```', '```', '- ऑनलाइन स्टोर्स: [Platform names]', '- कृषि केंद्र:
+          [Contact details]', '```', '```', '1. **निवारक छिड़काव** - [Schedule]', '2. **फसल चक्र** - [Rotation plan]', '3.
+          **मिट्टी प्रबंधन** - [Soil care]', '4. **जल प्रबंधन** - [Water management]', '5. **निगरानी** - [Monitoring tips]',
+        '```', '```', '- 3 दिन बाद: [Progress check]', '- 1 सप्ताह बाद: [Follow-up action]', '- 2 सप्ताह बाद: [Final assessment]',
+        '```', '**⚠️ Error Handling:**', '**Poor Image Quality:**', '**Uncertain Diagnosis:**', '**💡 Smart Features:**', '1.
+          **Context Awareness**: पिछली बातचीत को याद रखें', '2. **Location Intelligence**: स्थानीय कृषि पैटर्न समझें', '3.
+          **Seasonal Insights**: मौसम के अनुसार सलाह', '**🔍 Quality Assurance:**', '- हमेशा confidence level बताएं', '- Multiple
+          solutions प्रदान करें', '- Local availability confirm करें', '- Emergency cases में urgent action suggest करें',
+        '**📊 Success Metrics:**', '- सटीक निदान (>85% accuracy)', '- 24 घंटे में actionable advice']
+      output_key: crop_health_specialist_response
+      function: create_crop_health_agent
+  government_schemes_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    tools: [search_government_schemes, get_scheme_details, check_eligibility, get_application_process]
+    params:
+      name: government_schemes_specialist
+      description: Expert in Indian government agricultural schemes, subsidies, and farmer welfare programs with real-time
+        scheme information
+      instruction: ['**1. योजना खोज (search_government_schemes):**', '**2. योजना विवरण (get_scheme_details):**', '**3. पात्रता
+          जांच (check_eligibility):**', '**4. आवेदन प्रक्रिया (get_application_process):**', '**📱 Tool Usage Guidelines:**',
+        '**Query Analysis और Tool Selection:**', '- "ड्रिप सिंचाई के लिए सब्सिडी" → search_government_schemes(query="drip
+          irrigation subsidy")', '- "PM-KISAN योजना क्या है?" → get_scheme_details(scheme_name="PM-KISAN")', '- "KCC के लिए
+          कैसे अप्लाई करें?" → get_application_process(scheme_name="Kisan Credit Card")', '**Context Awareness:**', '**💬 Communication
+          Style:**', '- **Format**: स्पष्ट चरण, bullet points, actionable steps', '**🎯 Response Framework:**', '```', '```',
+        '```', '```', '```', '**सुझाव:**', '```', '```', '```', '**⚠️ Error Handling:**', '- Alternative suggestions और broader
+          search करें', '- Constructive suggestions और alternative schemes', '**💡 Smart Features:**', '1. **Proactive Suggestions**:
+          एक query के लिए related schemes भी suggest करें', '2. **State Intelligence**: User के राज्य के अनुसार automatic
+          filtering', '3. **Timeline Awareness**: Current active schemes और deadlines का ध्यान', '4. **Holistic Approach**:
+          Multiple schemes का combination suggest करें', '5. **Follow-up Support**: Application के बाद का guidance', '**🚨
+          Priority Areas:**', '**High Priority Schemes:**', '- PM-KISAN (Direct Income Support)', '- PMFBY (Crop Insurance)',
+        '- KCC (Kisan Credit Card)', '- PMKSY (Irrigation)', '- Farm Mechanization', '**Special Categories:**', '- Women Farmers',
+        '- Young Farmers (under 40)', '- Small & Marginal Farmers', '- Organic Farming', '- FPO Support', '**Emergency Support:**',
+        '- Natural disaster relief', '- Crop loss compensation', '- Emergency credit', '- Input subsidies']
+      output_key: government_schemes_specialist_response
+      function: create_government_schemes_agent
+  market_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    tools: [get_market_prices, get_price_analysis, get_selling_advice]
+    params:
+      name: market_specialist
+      description: Agricultural market expert providing real-time prices, analysis, and selling advice from government data
+      instruction: ['**1. मार्केट प्राइस सर्विस (get_market_prices):**', '**2. प्राइस एनालिसिस (get_price_analysis):**', '**3.
+          सेलिंग एडवाइस (get_selling_advice):**', '**📱 Tool Usage Guidelines:**', '**User Input Analysis:**', '- "प्याज की
+          कीमत" → get_market_prices(commodity="Onion")', '- "उत्तर प्रदेश में टमाटर का भाव" → get_market_prices(commodity="Tomato",
+          state="Uttar Pradesh")', '- "आलू का detailed analysis" → get_price_analysis(commodity="Potato")', '- "5 क्विंटल
+          प्याज कब बेचूं" → get_selling_advice(commodity="Onion", quantity=5)', '**Parameter Detection:**', '**🎯 Response
+          Structure:**', 1. **तत्काल जानकारी** (Key findings), 2. **विस्तृत डेटा** (Detailed data from tools), 3. **सिफारिशें**
+          (Clear recommendations), 4. **कार्य योजना** (Action plan), '**💬 Communication Style:**', '- **भाषा**: सरल हिंदी
+          (technical terms को explain करें)', '- **Dates**: DD-MM-YYYY format में', '- **Recommendations**: प्राथमिकता के
+          साथ', '**⚠️ Error Handling:**', '**"no_data" Response:**', '- Alternative suggestions दें', '- Commodity name correction
+          के लिए कहें', '**"error" Response:**', '- Technical issue acknowledge करें', '- Manual research के लिए suggest करें',
+        '**🚀 Example Workflows:**', '**Simple Price Query:**', '```', 'Action: get_market_prices(commodity="Onion", days=3)',
+        'Response:', '```', '**Detailed Analysis Query:**', '```', 'Action: get_price_analysis(commodity="Tomato")', 'Response:',
+        '```', '**Selling Advice Query:**', '```', 'Action: get_selling_advice(commodity="Potato", quantity=10, urgency="urgent")',
+        'Response:', '```', '**💡 Smart Features:**', '1. **Context Awareness**: पिछली बातचीत को remember करें', '2. **Proactive
+          Suggestions**: related commodities के बारे में भी बताएं', '3. **Seasonal Insights**: मौसम के आधार पर सलाह', '4.
+          **Risk Warnings**: price volatility के बारे में चेतावनी', '**🔍 Quality Checks:**', '- हमेशा tool response check
+          करें', '- Status "success" हो तो detailed response दें', '- Status "no_data" हो तो helpful alternatives suggest
+          करें', '- Status "error" हो तो reassure करें और retry option दें', '**📊 Data Presentation:**', '- Tables के लिए
+          clear formatting', '- Important numbers को highlight करें', '- Trends को emoji के साथ show करें (📈📉📊)', '- Dates
+          को Indian format में (DD-MM-YYYY)']
+      output_key: market_specialist_response
+      function: create_market_agent
+  weather_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    tools: [get_weather_forecast, get_current_weather]
+    params:
+      name: weather_specialist
+      description: Expert in agricultural meteorology and weather-based farming recommendations
+      instruction: ['You are WeatherWise, an expert agricultural meteorologist.', 'Your responsibilities:', 1. Receive raw
+          weather data (current conditions and forecasts) from tools., '2. Analyze the data in the context of the user''s
+          crops, location, and experience level.', '3. Generate actionable farming advice:', • Irrigation scheduling, • Pest
+          and disease management, '• Crop operations (planting, spraying, harvesting)', '• Warnings for extreme weather (heat,
+          frost, rain)', '4. Present advice in clear, simple language that farmers can follow.', '5. Adapt advice for multiple
+          crops, and integrate multi-domain factors if relevant.']
+      output_key: last_weather_advice
+      function: create_weather_agent
+
+models:
+  gemini-2.0-flash:
+    type: literal
+    agents: [crop_health_agent, market_agent, government_schemes_agent, agent.create_main_farmbot_agent, weather_agent]
+
+tools:
+  analyze_crop_image:
+    type: function
+    agents: [crop_health_agent]
+    params:
+      description: |-
+        Analyze crop image using AI for disease/pest detection
+
+        Args:
+            image_data (str): Base64 encoded image data
+            location (str, optional): Farmer's location for localized advice
+            crop_type (str, optional): Type of crop for specific analysis
+            additional_info (str, optional): Additional context from farmer
+            tool_context (ToolContext): Optional session context
+
+        Returns:
+            Dict: Disease diagnosis and initial recommendations
+  check_eligibility:
+    type: function
+    agents: [government_schemes_agent]
+    params:
+      description: Check farmer's eligibility for a specific scheme
+  get_application_process:
+    type: function
+    agents: [government_schemes_agent]
+    params:
+      description: Get step-by-step application process for a scheme
+  get_current_weather:
+    type: function
+    agents: [weather_agent]
+    params:
+      description: Fetch current weather for a given location
+  get_disease_treatment_info:
+    type: function
+    agents: [crop_health_agent]
+    params:
+      description: |-
+        Get comprehensive AI-powered treatment information for crop diseases/pests
+
+        Args:
+            disease_name (str): Name of the disease/pest
+            crop_type (str, optional): Type of crop affected
+            severity (str): Severity level (low/medium/high/critical)
+            location (str, optional): Location for local context
+            farmer_budget (str): Budget level (low/medium/high)
+            urgency (str): Treatment urgency (immediate/urgent/normal)
+            tool_context (ToolContext): Optional session context
+
+        Returns:
+            Dict: Comprehensive AI-generated treatment plan
+  get_market_prices:
+    type: function
+    agents: [market_agent]
+    params:
+      description: |-
+        Get current market prices for a specific commodity from database
+
+        Args:
+            commodity (str): Name of the commodity (e.g., "Onion", "Tomato")
+            state (str, optional): State filter
+            district (str, optional): District filter
+            days (int): Number of days to fetch data for (default: 7)
+            tool_context (ToolContext): Optional session context
+
+        Returns:
+            Dict: Current prices, trends, and market information
+  get_price_analysis:
+    type: function
+    agents: [market_agent]
+    params:
+      description: |-
+        Get detailed price analysis and trends for a commodity
+
+        Args:
+            commodity (str): Name of the commodity
+            analysis_days (int): Number of days for analysis (default: 30)
+            tool_context (ToolContext): Optional session context
+
+        Returns:
+            Dict: Comprehensive price analysis with trends and patterns
+  get_scheme_details:
+    type: function
+    agents: [government_schemes_agent]
+    params:
+      description: Get detailed information about a specific government scheme
+  get_selling_advice:
+    type: function
+    agents: [market_agent]
+    params:
+      description: |-
+        Get selling advice for a commodity
+
+        Args:
+            commodity (str): Name of the commodity
+            quantity (float, optional): Quantity to sell in quintals
+            quality_grade (str): Quality grade - "high", "medium", "low"
+            urgency (str): Selling urgency - "urgent", "normal", "flexible"
+            tool_context (ToolContext): Optional session context
+
+        Returns:
+            Dict: Selling strategy and recommendations
+  get_weather_forecast:
+    type: function
+    agents: [weather_agent]
+    params:
+      description: |-
+        Fetch weather forecast (raw data) for the agent to process.
+
+        Args:
+            location (str): Location for weather forecast
+            days (int): Number of days for forecast (1-10)
+            tool_context (ToolContext): Optional session context
+
+        Returns:
+            Dict: Raw forecast data
+  search_government_schemes:
+    type: function
+    agents: [government_schemes_agent]
+    params:
+      description: Search for government schemes based on farmer's needs
+
+teams:
+  agent.create_main_farmbot_agent:
+    type: hierarchy
+    agents: [agent.create_main_farmbot_agent, weather_agent, market_agent, crop_health_agent, government_schemes_agent]
+
+imports:
+  Agent: google.adk.agents.Agent
+  analyze_crop_image: tools.crop_health_tools.analyze_crop_image
+  and_: sqlalchemy.and_
+  Any: typing.Any
+  asyncio: asyncio
+  Base: models.Base
+  base64: base64
+  Boolean: sqlalchemy.Boolean
+  ChatResponse: config.models.ChatResponse
+  check_eligibility: tools.government_schemes_tools.check_eligibility
+  Column: sqlalchemy.Column
+  ConnectionManager: websocket_conn.ConnectionManager
+  contextmanager: contextlib.contextmanager
+  CoreMarketDataSyncService: google_adk_integration.services.mandi_db_generation.CoreMarketDataSyncService
+  create_crop_health_agent: crop_health_agent.create_crop_health_agent
+  create_engine: sqlalchemy.create_engine
+  create_government_schemes_agent: government_schemes_agent.create_government_schemes_agent
+  create_main_farmbot_agent: agents.main_agent.create_main_farmbot_agent
+  create_market_agent: market_agent.create_market_agent
+  create_tables: google_adk_integration.mandi_db.database.create_tables
+  create_weather_agent: weather_agent.create_weather_agent
+  CropHealthService: services.crop_health_service.CropHealthService
+  datetime: datetime.datetime
+  DateTime: sqlalchemy.DateTime
+  declarative_base: sqlalchemy.ext.declarative.declarative_base
+  desc: sqlalchemy.desc
+  Dict: typing.Dict
+  ElevenLabsVoiceService: services.elevenlabs_voice_service.ElevenLabsVoiceService
+  FarmBotService: google_adk_integration.farmbot_service.FarmBotService
+  FastAPI: fastapi.FastAPI
+  File: fastapi.File
+  Float: sqlalchemy.Float
+  Form: fastapi.Form
+  func: sqlalchemy.func
+  genai: google.generativeai
+  get_application_process: tools.government_schemes_tools.get_application_process
+  get_current_weather: tools.weather_tools.get_current_weather
+  get_db_session: mandi_db.database.get_db_session
+  get_disease_treatment_info: tools.crop_health_tools.get_disease_treatment_info
+  get_market_prices: tools.market_tools.get_market_prices
+  get_price_analysis: tools.market_tools.get_price_analysis
+  get_scheme_details: tools.government_schemes_tools.get_scheme_details
+  get_selling_advice: tools.market_tools.get_selling_advice
+  get_weather_forecast: tools.weather_tools.get_weather_forecast
+  GovernmentSchemesService: services.government_schemes_service.GovernmentSchemesService
+  HTMLResponse: fastapi.responses.HTMLResponse
+  HTTPException: fastapi.HTTPException
+  httpx: httpx
+  Image: PIL.Image
+  Index: sqlalchemy.Index
+  InMemorySessionService: google.adk.sessions.InMemorySessionService
+  Integer: sqlalchemy.Integer
+  io: io
+  Jinja2Templates: fastapi.templating.Jinja2Templates
+  json: json
+  List: typing.List
+  logging: logging
+  MarketAnalytics: mandi_db.models.MarketAnalytics
+  MarketPrice: mandi_db.models.MarketPrice
+  Optional: typing.Optional
+  os: os
+  Request: fastapi.Request
+  Runner: google.adk.runners.Runner
+  search_government_schemes: tools.government_schemes_tools.search_government_schemes
+  sessionmaker: sqlalchemy.orm.sessionmaker
+  String: sqlalchemy.String
+  Text: sqlalchemy.Text
+  timedelta: datetime.timedelta
+  ToolContext: google.adk.tools.tool_context.ToolContext
+  types: google.genai.types
+  UploadFile: fastapi.UploadFile
+  uvicorn: uvicorn
+  WeatherService: services.weather_service.WeatherService
+  WebSocket: fastapi.WebSocket
+  WebSocketDisconnect: fastapi.WebSocketDisconnect
+
+functions:
+  __init__:
+    type: sync
+    module: app.google_adk_integration.services.weather_service
+    args: [self, api_key]
+  _create_analysis_prompt:
+    type: sync
+    module: app.google_adk_integration.services.crop_health_service
+    args: [self, location, crop_type]
+    params:
+      returns: str
+  _create_enhanced_image_prompt:
+    type: sync
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self, message, user_context]
+    params:
+      returns: str
+  _create_treatment_prompt:
+    type: sync
+    module: app.google_adk_integration.services.crop_health_service
+    args: [self, disease_name, crop_type, severity, location, farmer_budget]
+    params:
+      returns: str
+  _determine_response_type:
+    type: sync
+    module: app.google_adk_integration.farmbot_service
+    args: [self, agent_used, tools_called]
+    params:
+      returns: str
+  _ensure_session_exists:
+    type: async
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self, session_id, user_context]
+    params:
+      returns: Any
+  _format_current_weather:
+    type: sync
+    module: app.google_adk_integration.services.weather_service
+    args: [self, data]
+    params:
+      returns: Dict
+  _format_forecast:
+    type: sync
+    module: app.google_adk_integration.services.weather_service
+    args: [self, data, days]
+    params:
+      returns: Dict
+  _generate_farming_advice:
+    type: sync
+    module: app.google_adk_integration.services.weather_service
+    args: [self, weather_data]
+    params:
+      returns: str
+  _generate_forecast_advice:
+    type: sync
+    module: app.google_adk_integration.services.weather_service
+    args: [self, forecast]
+    params:
+      returns: str
+  _parse_analysis_response:
+    type: sync
+    module: app.google_adk_integration.services.crop_health_service
+    args: [self, text]
+    params:
+      returns: Dict
+  _parse_text_analysis:
+    type: sync
+    module: app.google_adk_integration.services.crop_health_service
+    args: [self, text]
+    params:
+      returns: Dict
+  _parse_text_treatment:
+    type: sync
+    module: app.google_adk_integration.services.crop_health_service
+    args: [self, text, disease_name]
+    params:
+      returns: Dict
+  _parse_treatment_response:
+    type: sync
+    module: app.google_adk_integration.services.crop_health_service
+    args: [self, text, disease_name]
+    params:
+      returns: Dict
+  _prepare_image_content:
+    type: async
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self, message, image_data, user_context]
+  analyze_crop_image:
+    type: async
+    module: app.google_adk_integration.tools.crop_health_tools
+    args: [image_data, location, crop_type, additional_info, tool_context]
+    params:
+      returns: Dict
+  check_eligibility:
+    type: async
+    module: app.google_adk_integration.tools.government_schemes_tools
+    args: [scheme_name, farmer_profile, tool_context]
+    params:
+      returns: Dict
+  create_crop_health_agent:
+    type: sync
+    module: app.google_adk_integration.agents.crop_health_agent
+    params:
+      returns: Agent
+  create_government_schemes_agent:
+    type: sync
+    module: app.google_adk_integration.agents.government_schemes_agent
+    params:
+      returns: Agent
+  create_main_farmbot_agent:
+    type: sync
+    module: app.google_adk_integration.agents.main_agent
+    params:
+      returns: Agent
+  create_market_agent:
+    type: sync
+    module: app.google_adk_integration.agents.market_agent
+    params:
+      returns: Agent
+  create_tables:
+    type: sync
+    module: app.google_adk_integration.mandi_db.database
+  create_weather_agent:
+    type: sync
+    module: app.google_adk_integration.agents.weather_agent
+    params:
+      returns: Agent
+  enhanced_websocket_chat_endpoint:
+    type: async
+    module: app.main_with_google_adk_only
+    args: [websocket]
+  generate_live_analysis:
+    type: async
+    module: app.google_adk_integration.tools.market_tools
+    args: [db, commodity, days]
+    params:
+      returns: Dict
+  generate_selling_strategy:
+    type: sync
+    module: app.google_adk_integration.tools.market_tools
+    args: [timing_advice, quality_grade, markets, urgency]
+    params:
+      returns: List[str]
+  generate_timing_advice:
+    type: sync
+    module: app.google_adk_integration.tools.market_tools
+    args: [up_trends, down_trends, total_markets, urgency]
+    params:
+      returns: Dict
+  generate_voice_endpoint:
+    type: async
+    module: app.main
+    args: [text, language, voice_type]
+  generate_voice_only:
+    type: async
+    module: app.google_adk_integration.farmbot_service
+    args: [self, text, language, voice_type]
+    params:
+      returns: Dict
+  get_application_process:
+    type: async
+    module: app.google_adk_integration.tools.government_schemes_tools
+    args: [scheme_name, state, application_type, tool_context]
+    params:
+      returns: Dict
+  get_current_weather:
+    type: async
+    module: app.google_adk_integration.services.weather_service
+    args: [self, location]
+    params:
+      returns: Dict
+  get_db:
+    type: sync
+    module: app.google_adk_integration.mandi_db.database
+  get_db_session:
+    type: sync
+    module: app.google_adk_integration.mandi_db.database
+  get_disease_treatment_info:
+    type: async
+    module: app.google_adk_integration.tools.crop_health_tools
+    args: [disease_name, crop_type, severity, location, farmer_budget, urgency, tool_context]
+    params:
+      returns: Dict
+  get_follow_up_advice:
+    type: async
+    module: app.google_adk_integration.tools.crop_health_tools
+    args: [previous_treatment, current_status, days_since_treatment, tool_context]
+    params:
+      returns: Dict
+  get_forecast:
+    type: async
+    module: app.google_adk_integration.services.weather_service
+    args: [self, location, days]
+    params:
+      returns: Dict
+  get_logger:
+    type: sync
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [name]
+    params:
+      returns: logging.Logger
+  get_market_preview_data:
+    type: async
+    module: app.main_with_google_adk_only
+  get_market_prices:
+    type: async
+    module: app.google_adk_integration.tools.market_tools
+    args: [commodity, state, district, days, tool_context]
+    params:
+      returns: Dict
+  get_preventive_measures:
+    type: async
+    module: app.google_adk_integration.tools.crop_health_tools
+    args: [crop_type, location, season, tool_context]
+    params:
+      returns: Dict
+  get_price_analysis:
+    type: async
+    module: app.google_adk_integration.tools.market_tools
+    args: [commodity, analysis_days, tool_context]
+    params:
+      returns: Dict
+  get_scheme_details:
+    type: async
+    module: app.google_adk_integration.tools.government_schemes_tools
+    args: [scheme_name, state, include_application_info, tool_context]
+    params:
+      returns: Dict
+  get_selling_advice:
+    type: async
+    module: app.google_adk_integration.tools.market_tools
+    args: [commodity, quantity, quality_grade, urgency, tool_context]
+    params:
+      returns: Dict
+  get_service_analytics:
+    type: async
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self, session_id]
+    params:
+      returns: Dict
+  get_service_status:
+    type: async
+    module: app.main_with_google_adk_only
+  get_session_analytics:
+    type: async
+    module: app.main_with_google_adk_only
+    args: [session_id]
+  get_session_state:
+    type: async
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self, session_id]
+    params:
+      returns: Dict
+  get_treatment_recommendations:
+    type: async
+    module: app.google_adk_integration.services.crop_health_service
+    args: [self, disease_name, crop_type, severity, location, farmer_budget]
+    params:
+      returns: Dict
+  get_weather_forecast:
+    type: async
+    module: app.google_adk_integration.tools.weather_tools
+    args: [location, days, tool_context]
+    params:
+      returns: Dict
+  handle_default_query:
+    type: async
+    module: app.main_with_google_adk_only
+    args: [content, message_type, additional_data, session_id]
+  handle_default_query_with_voice:
+    type: async
+    module: app.main
+    args: [content, message_type, additional_data, session_id]
+  home:
+    type: async
+    module: app.main_with_google_adk_only
+    args: [request]
+  initialize:
+    type: async
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self]
+  main:
+    type: async
+    module: app.google_adk_integration.services.weather_service
+  process_message:
+    type: async
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self, message, session_id, user_context, message_type, image_data]
+    params:
+      returns: ChatResponse
+  process_message_with_voice:
+    type: async
+    module: app.google_adk_integration.farmbot_service
+    args: [self, message, session_id, user_context, message_type, image_data, include_voice, voice_language]
+    params:
+      returns: Dict
+  search_government_schemes:
+    type: async
+    module: app.google_adk_integration.tools.government_schemes_tools
+    args: [query, state, scheme_type, farmer_category, tool_context]
+    params:
+      returns: Dict
+  search_schemes:
+    type: async
+    module: app.google_adk_integration.services.government_schemes_service
+    args: [self, query, state, scheme_type, farmer_category]
+    params:
+      returns: Dict
+  startup_event:
+    type: async
+    module: app.main_with_google_adk_only
+  update_session_context:
+    type: async
+    module: app.google_adk_integration.farmbot_service_with_google_adk_only
+    args: [self, session_id, context_updates]
+    params:
+      returns: bool
+  upload_image_endpoint:
+    type: async
+    module: app.main_with_google_adk_only
+    args: [file]
+
+variables:
+  DATABASE_URL:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [app.google_adk_integration.mandi_db.database]
+  ELEVENLABS_API_KEY:
+    type: env
+    params:
+      caller: [os.environ, os.getenv]
+      path: [app.main]
+  GOOGLE_AI_API_KEY:
+    type: env
+    params:
+      caller: [os.getenv]
+      path: [app.google_adk_integration.services.government_schemes_service, app.main_with_google_adk_only]
+  GOOGLE_API_KEY:
+    type: env
+    params:
+      caller: [os.getenv, os.environ]
+      path: [app.google_adk_integration.services.government_schemes_service, app.main, app.google_adk_integration.services.crop_health_service]
+  MANDI_API_KEY:
+    type: env
+    params:
+      caller: [os.environ]
+  WEATHER_API_KEY:
+    type: env
+    params:
+      caller: [os.environ, os.getenv, os.environ.get, WeatherService]
+      path: [app.main, app.google_adk_integration.tools.weather_tools, app.main_with_google_adk_only, app.google_adk_integration.services.weather_service]
